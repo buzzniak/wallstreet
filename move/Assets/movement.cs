@@ -6,7 +6,7 @@ public class movement : MonoBehaviour {
 
 	
 	float speed = 20.0f;
-	float rotateSpeed = 150.0f;
+	float rotateSpeed = 300.0f;
 	float stepsize = 4f;
 	bool isMoving = false;
 	Vector3 pos;
@@ -24,29 +24,45 @@ public class movement : MonoBehaviour {
 	
 	void Update() {
 		print(Input.GetAxis("Horizontal"));
+		if (!isMoving) {
+			if (Input.GetAxis("Horizontal") > 0 && tr.position == pos) {
+				pos += Vector3.right*stepsize;
+				isMoving = true;
+			}
+			else if (Input.GetAxis("Horizontal") < 0 && tr.position == pos) {
+				pos += Vector3.left*stepsize;
+				isMoving = true;
+			}
+			else if (Input.GetAxis("Vertical") > 0 && tr.position == pos) {
+				pos += Vector3.forward*stepsize;
+				isMoving = true;
+			}
+			else if (Input.GetAxis("Vertical") < 0 && tr.position == pos) {
+				pos += Vector3.back*stepsize;
+				isMoving = true;
+			}
+			
+			if (Input.GetKeyDown(KeyCode.Q)) {
+				//Rotate Left
+				originalRotation = transform.rotation;
+				StartCoroutine (PlayerRotateLeft (originalRotation));
+				//transform.rotation *= Quaternion.Euler(0, 90f * rotateSpeed * Time.deltaTime, 0);
+				
+				isMoving = true;
+			}
+			else if (Input.GetKeyDown(KeyCode.E)) {
+				//Rotate Right
+				originalRotation = transform.rotation;
+				StartCoroutine (PlayerRotateRight (originalRotation));
+				//transform.rotation *= Quaternion.Euler(0, -90f * rotateSpeed * Time.deltaTime, 0);
+				
+				isMoving = true;
+			}
+			
+			transform.position = Vector3.MoveTowards(transform.position, pos, Time.deltaTime * speed);
+			isMoving = false;
+		}
 		
-		if (Input.GetAxis("Horizontal") > 0 && tr.position == pos) {
-			pos += Vector3.right*stepsize;
-		}
-		else if (Input.GetAxis("Horizontal") < 0 && tr.position == pos) {
-			pos += Vector3.left*stepsize;
-		}
-		else if (Input.GetAxis("Vertical") > 0 && tr.position == pos) {
-			pos += Vector3.forward*stepsize;
-		}
-		else if (Input.GetAxis("Vertical") < 0 && tr.position == pos) {
-			pos += Vector3.back*stepsize;
-		}
-		else if (Input.GetKeyDown(KeyCode.Q) && tr.position == pos) {
-			//Rotate Left
-			StartCoroutine (PlayerRotateLeft (originalRotation));
-		}
-		else if (Input.GetKeyDown(KeyCode.E) && tr.position == pos) {
-			//Rotate Right
-			StartCoroutine (PlayerRotateRight (originalRotation));
-		}
-		
-		transform.position = Vector3.MoveTowards(transform.position, pos, Time.deltaTime * speed);
 	}
 	
 	IEnumerator PlayerRotateRight(Quaternion originalRotation) {
