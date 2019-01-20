@@ -8,96 +8,78 @@ public class movement : MonoBehaviour {
 	float speed = 20.0f;
 	float rotateSpeed = 300.0f;
 	float stepsize = 4f;
-	bool isMoving = false;
+	bool isRotating = false;
 	Vector3 pos;
 	Transform tr;
 	
 	Quaternion originalRotation;
 	
 	
-	void Start() {
+	void Start()
+    {
 		pos = transform.position;
 		tr = transform;	
-		originalRotation = transform.rotation;
-		
+		originalRotation = transform.rotation;		
 	}
 	
-	void Update() {
-		print(Input.GetAxis("Horizontal"));
-		if (!isMoving) {
-			if (Input.GetAxis("Horizontal") > 0 && tr.position == pos) {
-				pos += Vector3.right*stepsize;
-				isMoving = true;
-			}
-			else if (Input.GetAxis("Horizontal") < 0 && tr.position == pos) {
+	void Update()
+    {
+            transform.Translate(Vector3.right * Time.deltaTime, Space.World);
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+            //pos += Vector3.right*stepsize; 
+                
+            }
+			else if (Input.GetKeyDown(KeyCode.A))
+            {
 				pos += Vector3.left*stepsize;
-				isMoving = true;
 			}
-			else if (Input.GetAxis("Vertical") > 0 && tr.position == pos) {
+			else if (Input.GetKeyDown(KeyCode.W))
+            {
 				pos += Vector3.forward*stepsize;
-				isMoving = true;
 			}
-			else if (Input.GetAxis("Vertical") < 0 && tr.position == pos) {
+			else if (Input.GetKeyDown(KeyCode.S))
+            {
 				pos += Vector3.back*stepsize;
-				isMoving = true;
 			}
 			
-			if (Input.GetKeyDown(KeyCode.Q)) {
-				//Rotate Left
-				originalRotation = transform.rotation;
-				StartCoroutine (PlayerRotateLeft (originalRotation));
-				//transform.rotation *= Quaternion.Euler(0, 90f * rotateSpeed * Time.deltaTime, 0);
-				
-				isMoving = true;
-			}
-			else if (Input.GetKeyDown(KeyCode.E)) {
-				//Rotate Right
-				originalRotation = transform.rotation;
-				StartCoroutine (PlayerRotateRight (originalRotation));
-				//transform.rotation *= Quaternion.Euler(0, -90f * rotateSpeed * Time.deltaTime, 0);
-				
-				isMoving = true;
-			}
+			if (Input.GetKeyDown(KeyCode.Q) && !isRotating)
+            {
+                originalRotation = transform.rotation;
+                StartCoroutine(PlayerRotate(originalRotation, false));
+            }
+			else if (Input.GetKeyDown(KeyCode.E) && !isRotating)
+            {
+                originalRotation = transform.rotation;
+                StartCoroutine(PlayerRotate(originalRotation,true));
+            }
 			
 			transform.position = Vector3.MoveTowards(transform.position, pos, Time.deltaTime * speed);
-			isMoving = false;
-		}
-		
-	}
+    }
 	
-	IEnumerator PlayerRotateRight(Quaternion originalRotation) {
-		
+	IEnumerator PlayerRotate(Quaternion originalRotation, bool toRight)
+    {
+        isRotating = true;
 		Quaternion targetRotation = originalRotation;
-		targetRotation *= Quaternion.AngleAxis (90, Vector3.up);
-		
-		while (this.transform.rotation.y != targetRotation.y) {
-			
-			/*Debug.Log ("Current: " + this.transform.rotation.y);
-			Debug.Log ("Target: " + targetRotation.y);*/
-			
-			isMoving = true;
-			transform.rotation = Quaternion.RotateTowards (transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+        if (toRight)
+        {
+            targetRotation *= Quaternion.AngleAxis(90, Vector3.up);
+        }
+        else
+        {
+            targetRotation *= Quaternion.AngleAxis(90, Vector3.down);
+        }
+
+		while (this.transform.rotation.eulerAngles.y != targetRotation.eulerAngles.y)
+        {
+            transform.rotation = Quaternion.RotateTowards (transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 			yield return null;
-		}
-		
-		isMoving = false;
-	}
-	
-	IEnumerator PlayerRotateLeft(Quaternion originalRotation) {
-		
-		Quaternion targetRotation = originalRotation;
-		targetRotation *= Quaternion.AngleAxis (90, Vector3.down);
-		
-		while (this.transform.rotation.y != targetRotation.y) {
-			
-			/*Debug.Log ("Current: " + this.transform.rotation.y);
-			Debug.Log ("Target: " + targetRotation.y);*/
-			
-			isMoving = true;
-			transform.rotation = Quaternion.RotateTowards (transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
-			yield return null;
-		}
-		
-		isMoving = false;
-	}
+        }
+        isRotating = false;
+    }
+
+    IEnumerator PlayerMove(Quaternion originalRotation, bool toRight)
+    {
+        yield return null;
+    }
 }
