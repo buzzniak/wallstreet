@@ -22,7 +22,7 @@ public class ProjectileDestroy : MonoBehaviour {
 			else {
 				Destroy(collision.gameObject);
 				Destroy(gameObject);
-				Vector3 position = new Vector3(Mathf.RoundToInt(Random.Range(-9f, 9f))*7, 3, Mathf.RoundToInt(Random.Range(-9f, 9f))*7);
+				Vector3 position = new Vector3(Mathf.RoundToInt(Random.Range(0, 9f))*7, 3, Mathf.RoundToInt(Random.Range(0, 9f))*7);
 				GameObject newEnemy = Instantiate(enemy, position, Quaternion.identity) as GameObject;
 				
 			}

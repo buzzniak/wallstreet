@@ -30,7 +30,7 @@ public class movement : MonoBehaviour
 			StartCoroutine(PlayerMove(Vector3.left * m_stepsize_f));
 		}
 		else if (Input.GetKeyDown(KeyCode.W) && !m_isMovementFrozen_b &&
-		         !Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), 5))
+		         !Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), 4))
 		{
 			StartCoroutine(PlayerMove(Vector3.forward* m_stepsize_f));
 		}
@@ -75,6 +75,10 @@ public class movement : MonoBehaviour
 	private IEnumerator PlayerMove(Vector3 f_targetDirection_v3)
 	{
 		m_isMovementFrozen_b = true;
+		//Vector3 l_targetTranslation_v3 = this.transform.position + f_targetDirection_v3;
+		/*while (this.transform.position != f_targetDirection_v3) {
+			this.transform.position = Vector3.MoveTowards(this.transform.position, 	l_targetTranslation_v3, 2);
+		}*/
 		Vector3 l_targetTranslation_v3 = this.transform.position + f_targetDirection_v3;
 		transform.Translate(f_targetDirection_v3, Space.Self);
 		

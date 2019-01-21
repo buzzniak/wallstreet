@@ -7,6 +7,8 @@ public class ProjectileShooter : MonoBehaviour {
 	public float projectilespeed;
 	public float frequency = 10f;
 	public float magnitude = 0.5f;
+	public float shotLength = 100;
+	public Vector3 targetVector;
 	
 	// Use this for initialization
 	void Start () {
@@ -17,13 +19,17 @@ public class ProjectileShooter : MonoBehaviour {
 	void Update () {
 		if (Input.GetMouseButtonDown(0)) {
 			GameObject projectile = Instantiate(prefab) as GameObject;
+			//StartCoroutine(ShootProjectile(projectile, Vector3.forward*shotLength));
 			projectile.transform.position = transform.position+Camera.main.transform.forward * 2;
-			//projectile.transform.position.y = projectile.transform.position.y + Mathf.Sin(frequency*Time.time)* magnitude;
-			//Vector3 currpos = transform.position;
-			//projectile.transform.position = new Vector3 (transform.position.x, transform.position.y + (Mathf.Sin(frequency*Time.time)* magnitude), transform.position.z);
+			//projectile.transform.Translate
+			
+			//projectile.transform.Translate(new Vector3(0, Mathf.Sin(frequency * Time.time) * magnitude, projectilespeed), Space.Self);
 			Rigidbody rb = projectile.GetComponent<Rigidbody>();
 			rb.velocity = Camera.main.transform.forward*projectilespeed;
 			
 		}
 	}
+	
+
+	
 }
